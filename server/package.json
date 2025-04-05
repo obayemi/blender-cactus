@@ -1,0 +1,17 @@
+{
+  "name": "cactus-graphql",
+  "version": "1.0.0",
+  "scripts": {
+    "serve": "node src/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@graphile-contrib/constraint-error-tags": "^1.1.0",
+    "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
+    "@graphile/pg-pubsub": "^4.13.0",
+    "express": "^5.1.0",
+    "postgraphile": "^4.14.0"
+  }
+}

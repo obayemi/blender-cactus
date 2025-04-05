@@ -52,6 +52,11 @@ sampling close frames for every worker in different parts of the timeline
   - username
   - credits
 
+- Invitations
+  - user_from
+  - email
+  - used_by
+
 - Projects
 
   - author
@@ -67,6 +72,11 @@ sampling close frames for every worker in different parts of the timeline
   - frames from-to
   - archive
     - project (through archive)
+
+- RenderRequestAck (find better name, for users to mark that they accept a specific render task)
+
+  - render
+  - user
 
 - Results
 

@@ -1,0 +1,68 @@
+services:
+  cacti-db:
+    container_name: cactus-db
+    restart: always
+    image: cactus-db
+    build:
+      context: ./db
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - cacti-net
+    ports:
+      - 5432:5432
+
+  # storage:
+  #   image: docker.io/bitnami/minio:2022
+  #   ports:
+  #     - '9000:9000'
+  #     - '9001:9001'
+  #   networks:
+  #     - cacti-net
+  #   volumes:
+  #     - 'minio_data:/data'
+  #   env_file:
+  #     - .env
+
+  migrations:
+    container_name: cactus-migrations
+    restart: always
+    image: cactus-migrations
+    build:
+      context: ./migrations
+    env_file:
+      - .env
+    networks:
+      - cacti-net
+    depends_on:
+      - cacti-db
+    volumes:
+      - ./migrations/migrations/:/migrate/migrations
+    command: graphile-migrate watch
+
+  graphql:
+    container_name: cactus-graphql
+    restart: always
+    image: cactus-graphql
+    build:
+      context: ./server
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+    networks:
+      - cacti-net
+    volumes:
+      - ./server/:/app
+    depends_on:
+      - cacti-db
+
+
+networks:
+  cacti-net:
+
+volumes:
+  db:
+  minio_data:
