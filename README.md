@@ -1,5 +1,42 @@
 # Blender Cactus
 
+## How to run
+
+### Cloud part
+
+> you are expected to have docker and docker compose on your machine for this
+
+configure the environment 
+put a configuration in .env like
+```env
+# postgres init
+POSTGRES_PASSWORD="cactus"
+
+# migrations
+DATABASE_URL="postgres://postgres:cactus@cactus-db/cactus"
+SHADOW_DATABASE_URL="postgres://postgres:cactus@cactus-db/cactus_shadow"
+ROOT_DATABASE_URL="postgres://postgres:cactus@localhost/postgres"
+```
+
+then run with
+
+```bash
+docker compose up -d --build
+```
+
+### agent
+
+> WIP, no configuration yet
+
+see [./agent/README.md].
+
+In short:
+
+```bash
+cd agent
+uv run python src/main.py
+```
+
 ## Interfaces
 
 - project management

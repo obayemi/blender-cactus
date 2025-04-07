@@ -72,10 +72,10 @@
    * afterAllMigrations: actions executed once all migrations are complete.
    */
   "afterAllMigrations": [
-    {
-      "_": "command",
-      "command": "pg_dump --schema-only --no-owner --exclude-schema=graphile_migrate --file=data/schema.sql \"$GM_DBURL\""
-    }
+  //   {
+  //     "_": "command",
+  //     "command": "pg_dump --schema-only --no-owner --exclude-schema=graphile_migrate --file=data/schema.sql \"$GM_DBURL\""
+  //   }
   ],
 
   /*
