@@ -24,11 +24,11 @@ then run with
 docker compose up -d --build
 ```
 
-### agent
+### Agent
 
 > WIP, no configuration yet
 
-see [./agent/README.md].
+see (./agent/README.md).
 
 In short:
 
