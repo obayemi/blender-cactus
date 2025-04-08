@@ -1,10 +1,10 @@
-FROM node:alpine
+FROM node:23-bookworm-slim
 
 WORKDIR /app/
 
 COPY ./package.json ./package-lock.json ./
 
-RUN npm i
+RUN npm install 
 
 COPY src ./
 

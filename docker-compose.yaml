@@ -1,5 +1,5 @@
 services:
-  cacti-db:
+  db:
     container_name: cactus-db
     restart: always
     image: cactus-db
@@ -37,7 +37,7 @@ services:
     networks:
       - cacti-net
     depends_on:
-      - cacti-db
+      - db
     volumes:
       - ./migrations/migrations/:/migrate/migrations
     command: graphile-migrate watch
@@ -57,7 +57,7 @@ services:
     volumes:
       - ./server/:/app
     depends_on:
-      - cacti-db
+      - db
 
 
 networks:

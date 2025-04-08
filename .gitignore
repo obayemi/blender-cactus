@@ -1,5 +1,14 @@
-.env
+# Node
 node_modules
-./migrations/node_modules/
-./server/node_modules/
-titled.blend
+ 
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Direnv
+.direnv/
+
+# misc
+*.blend
