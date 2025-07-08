@@ -1,0 +1,14 @@
+[project]
+name = "cactus-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "~=3.11"
+dependencies = [
+    "bpy>=4.4.0",
+    "cactus-tools",
+    "websockets>=15.0.1",
+]
+
+# [tool.uv]
+# package = true
