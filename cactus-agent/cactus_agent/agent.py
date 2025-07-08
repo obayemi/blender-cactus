@@ -66,7 +66,7 @@ class Agent():
         print(cmd.json())
         print("---------------------------")
 
-        cmd = commands.Command.validate_json(cmd.json())
+        cmd = commands.CactusCommand.parse_raw(cmd.json())
         print(cmd)
         print(type(cmd))
         print(isinstance(cmd, commands.Connection))
@@ -80,7 +80,7 @@ class Agent():
         print(cmd.json())
         print("---------------------------")
 
-        cmd = commands.Command.validate_json(cmd.json())
+        cmd = commands.CactusCommand.model_validate_json(cmd.json())
         print(cmd)
         print(type(cmd))
         print(isinstance(cmd, commands.File))

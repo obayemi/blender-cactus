@@ -1,19 +1,36 @@
 import abc
-from pydantic import BaseModel, SerializeAsAny, TypeAdapter, Field
-from typing import Literal, Annotated
+from pydantic import BaseModel, TypeAdapter, Field, model_validator, ValidatorFunctionWrapHandler
+from pydantic.fields import FieldInfo
+from typing import Literal, Annotated, Union, Any, ClassVar
 
 
 class CactusCommand(BaseModel, abc.ABC):
     type: str
 
+    _subclasses: ClassVar[dict[str, type[Any]]] = {}
+    _discriminating_type_adapter: ClassVar[TypeAdapter]
 
-# Command = Annotated[SerializeAsAny[CactusCommand], Field(discriminator='type')]
-# Command = TypeAdapter(Annotated[CactusCommand, Field(discriminator='type')])
+    @model_validator(mode='wrap')
+    @classmethod
+    def _parse_into_subclass(cls, v: Any, handler: ValidatorFunctionWrapHandler) -> 'CactusCommand':
+        if cls is CactusCommand:
+            return CactusCommand._discriminating_type_adapter.validate_python(v)
+        return handler(v)
+
+    @classmethod
+    def __pydantic_init_subclass__(cls, **kwargs):
+        # This approach requires all subclasses have a field called 'type' to be used as a discriminator
+        CactusCommand._subclasses[cls.model_fields['type'].default] = cls
+
+        # The following will create a new type adapter every time a new subclass is created,
+        # which is fine if there aren't that many classes (as far as performance goes)
+        CactusCommand._discriminating_type_adapter = TypeAdapter(
+            Annotated[Union[tuple(CactusCommand._subclasses.values())], Field(discriminator='type')])
 
 
 class Connection(CactusCommand):
     type: Literal["connection"] = "connection"
-    cat: Literal["agent"] | Literal["client"]
+    cat: Literal["agent", "client"]
 
 
 class File(CactusCommand):
@@ -22,7 +39,7 @@ class File(CactusCommand):
 
 
 class SendFile(CactusCommand):
-    type: Literal["send file"] = "send file"
+    type: Literal["sendfile"] = "sendfile"
     name: str
 
 
@@ -34,14 +51,11 @@ class Render(CactusCommand):
 
 
 class HaveFile(CactusCommand):
-    type: Literal["have file"] = "have file"
+    type: Literal["havefile"] = "havefile"
     name: str
 
 
 class HasFile(CactusCommand):
-    type: Literal["has file"] = "has file"
+    type: Literal["hasfile"] = "hasfile"
     name: str
     has: bool
-
-
-Command = TypeAdapter(Connection | File | SendFile)
