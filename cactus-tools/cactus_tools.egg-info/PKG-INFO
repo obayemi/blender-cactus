@@ -1,7 +1,0 @@
-Metadata-Version: 2.4
-Name: cactus-tools
-Version: 0.1.0
-Summary: Add your description here
-Requires-Python: ~=3.11
-Description-Content-Type: text/markdown
-Requires-Dist: pydantic>=2.11.7

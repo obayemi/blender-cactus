@@ -3,3 +3,13 @@ node_modules
 ./migrations/node_modules/
 ./server/node_modules/
 titled.blend
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+.venv
