@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from agent import Agent
 
 parser = ArgumentParser()
-parser.add_argument("--server", type=str, default=None, help="URL of server")
+parser.add_argument("-s", "--server", type=str, default="ws://127.0.0.1:8000", help="URL of server")
 args = parser.parse_args()
 agent = Agent()
 asyncio.run(agent.run(args.server))
