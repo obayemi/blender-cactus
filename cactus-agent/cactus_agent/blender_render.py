@@ -18,5 +18,5 @@ def render(out:Path, start:int, end:int, scene:str=None):
 
     for i in range(start,end):
         scene.frame_set(i)
-        scene.render.filepath = str(out/f"frame_{i}.png")
+        scene.render.filepath = str(out/f"{out.stem()}_{i}")
         bpy.os.render.render(write_still=True)
