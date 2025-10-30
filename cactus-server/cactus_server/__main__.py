@@ -6,6 +6,7 @@ from server import Server
 parser = ArgumentParser()
 parser.add_argument("-u","--url", type=str, default="0.0.0.0", help="URL to server")
 parser.add_argument("-p","--port", type=int, default=8000, help="Port to wit connection on")
+parser.add_argument("--archives", type=str, default=None)
 args = parser.parse_args()
-server = Server()
+server = Server(args.archives)
 asyncio.run(server.run(args.url,args.port))

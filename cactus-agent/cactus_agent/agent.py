@@ -5,7 +5,7 @@ from websockets.asyncio.client import connect
 
 import cactus_tools as tools
 from cactus_tools import commands
-import cactus_agent.blender_render as render
+import blender_render as render
 
 
 logger = logging.getLogger(__name__)
@@ -13,16 +13,23 @@ logging.basicConfig(format='%(asctime)s %(levelname)s - %(name)s: %(message)s',
                     level=logging.INFO,
                     datefmt='%m-%d-%Y %I:%M:%S',)
 
-OUT_FOLDER = Path('OUT')
-ARCHIVES_FOLDER = Path('archives')
 
 
 class Agent():
 
+    OUT_FOLDER = Path('OUT')
+    ARCHIVES_FOLDER = Path('archives')
+
+    def __init__(self, out:str=None, archive:str=None):
+        if out:
+            self.OUT_FOLDER = Path(out)
+        if archive:
+            self.ARCHIVES_FOLDER = Path(archive)
+
     async def render(cmd: commands.Render):
-        render.set_project(ARCHIVES_FOLDER / cmd.file)
+        render.set_project(self.ARCHIVES_FOLDER / cmd.file)
         
-        out_folder = (OUT_FOLDER / cmd.file).with_suffix('')
+        out_folder = (self.OUT_FOLDER / cmd.file).with_suffix('')
         render.render(out_folder, cmd.frame_start, cmd.frame_stop)
         tools.make_archive(out_folder,out_folder.with_suffix("zip"))
         return out_folder.with_suffix("zip")
@@ -34,9 +41,9 @@ class Agent():
             websocket.logger.debug(message)
             data = commands.CactusCommand.model_validate_json(message)
             if isinstance(data, commands.File):
-                await tools.recv_file(websocket, data.name, ARCHIVES_FOLDER)
+                await tools.recv_file(websocket, data.name, self.ARCHIVES_FOLDER)
             elif isinstance(data, commands.SendFile):
-                await tools.send_file(websocket, data.name, OUT_FOLDER)
+                await tools.send_file(websocket, data.name, self.OUT_FOLDER)
             elif isinstance(data, commands.Render):
                 result = await render(data)
                 await tools.send_file(websocket, result)

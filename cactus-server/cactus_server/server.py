@@ -4,6 +4,7 @@ import logging
 
 from websockets.asyncio.server import serve, broadcast
 from pydantic import ValidationError
+from pathlib import Path
 
 from cactus_tools import commands
 from cactus_tools import *
@@ -15,8 +16,11 @@ logging.basicConfig(format='%(asctime)s %(levelname)s - %(name)s: %(message)s',
 
 
 class Server():
+    ARCHIVES_FOLDER = Path("archives")
 
-    def __init__(self):
+    def __init__(self,archives:str=None):
+        if archives:
+            self.ARCHIVES_FOLDER = Path(archives)
         self.agent = dict()
         self.client = dict()
 
@@ -25,19 +29,20 @@ class Server():
         self.client[str(websocket.id)] = websocket
         await websocket.send(commands.AgentList(list=self.agent.keys()).json())
         await websocket.wait_closed()
+        del self.client[str(websocket.id)]
 
     async def handle_agent(self,websocket):
         websocket.logger.info(f"New agent connected: {str(websocket.id)}")
         self.agent[str(websocket.id)] = websocket
         broadcast(self.client.values(), commands.AgentList(list=self.agent.keys()).json())
-        # await send_file(websocket, "test.png", Path("test"))
+        await send_file(websocket, "test.png", self.ARCHIVES_FOLDER)
         # await websocket.send(commands.Render(project="test",frame_start=3,frame_stop=10).json())
-        await websocket.send(commands.SendFile(name="test.png").json())
+        # await websocket.send(commands.SendFile(noutame="test.png").json())
         async for message in websocket:
             logger.debug(message)
             data = commands.CactusCommand.parse_raw(message)
             if isinstance(data, commands.File):
-                await recv_file(websocket, data.name, Path("test"))
+                await recv_file(websocket, data.name, self.ARCHIVES_FOLDER)
 
         del self.agent[str(websocket.id)]
         broadcast(self.client.values(), commands.AgentList(list=self.agent.keys()).json())
